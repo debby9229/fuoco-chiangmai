@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUOCO — Chiang Mai Field Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#0e0d0b;
+  --card:#171612;
+  --cream:#f2ede4;
+  --muted:#7a7060;
+  --border:rgba(255,255,255,0.07);
+  --fire:#d4430f;
+  --fire2:#ff6b35;
+  --gold:#c9a84c;
+  /* Category colors */
+  --street:#e85d3a;
+  --sitdown:#5b8ff0;
+  --producer:#5aad7a;
+  --coffee:#c9a84c;
+  --wine:#9b6bb5;
+  --bakery:#e8a43a;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* ── GRAIN ── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:998;opacity:0.3}
+
+/* ── HERO ── */
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:48px 40px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(212,67,15,0.18) 0%,transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(201,168,76,0.07) 0%,transparent 50%)}
+.hero-photo{position:absolute;inset:0;background:linear-gradient(135deg,#1a1510 0%,#0e0d0b 50%,#1a1008 100%);display:flex;align-items:center;justify-content:center}
+.hero-photo span{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.1);text-align:center;padding:20px}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(14,13,11,0.97) 0%,rgba(14,13,11,0.35) 55%,rgba(14,13,11,0.1) 100%)}
+.hero-content{position:relative;z-index:2}
+.hero-eyebrow{font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:var(--fire2);margin-bottom:14px;animation:up 0.8s 0.1s ease both}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(60px,14vw,110px);font-weight:800;line-height:0.92;letter-spacing:-0.02em;margin-bottom:6px;animation:up 0.8s 0.25s ease both}
+.hero-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--fire2)}
+.hero-sub{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:rgba(242,237,228,0.4);margin-bottom:32px;animation:up 0.8s 0.4s ease both}
+.hero-bottom{display:flex;align-items:center;gap:16px;flex-wrap:wrap;animation:up 0.8s 0.55s ease both}
+.hero-tag{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);border:1px solid rgba(255,255,255,0.1);padding:6px 14px;border-radius:100px}
+.hero-count{margin-left:auto;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--fire2)}
+.hero-count span{font-size:10px;font-weight:400;color:var(--muted);display:block;letter-spacing:0.1em;text-transform:uppercase}
+
+/* ── INTRO ── */
+.intro{padding:56px 40px;border-bottom:1px solid var(--border);max-width:680px}
+.intro p{font-family:'Instrument Serif',serif;font-size:clamp(17px,2.5vw,22px);line-height:1.7;color:rgba(242,237,228,0.65)}
+.intro strong{color:var(--cream);font-weight:400}
+.intro em{color:var(--fire2);font-style:italic}
+
+/* ── LEGEND ── */
+.legend{padding:20px 40px;border-bottom:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.legend-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(242,237,228,0.5)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── FILTER BAR ── */
+.filter-bar{position:sticky;top:0;z-index:200;background:rgba(14,13,11,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px}
+.filter-row{display:flex;gap:6px;padding:14px 0;overflow-x:auto;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-sep{width:1px;background:var(--border);margin:8px 4px;flex-shrink:0}
+.f-btn{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.f-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--cream)}
+.f-btn.active{color:white;border-color:transparent}
+.f-btn[data-cat="all"].active{background:var(--fire)}
+.f-btn[data-cat="street"].active{background:var(--street)}
+.f-btn[data-cat="sitdown"].active{background:var(--sitdown)}
+.f-btn[data-cat="producer"].active{background:var(--producer)}
+.f-btn[data-cat="coffee"].active{background:var(--coffee)}
+.f-btn[data-cat="wine"].active{background:var(--wine)}
+.f-btn[data-cat="bakery"].active{background:var(--bakery)}
+.f-btn[data-time="morning"].active{background:rgba(201,168,76,0.8)}
+.f-btn[data-time="afternoon"].active{background:rgba(212,67,15,0.8)}
+.f-btn[data-time="evening"].active{background:rgba(91,106,240,0.8)}
+.f-btn[data-time="allday"].active{background:rgba(90,173,122,0.8)}
+.results-count{padding:8px 40px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{display:grid;grid-template-columns:1fr 420px;min-height:calc(100vh - 60px);position:relative}
+
+/* ── CARDS SIDE ── */
+.cards-side{padding:32px 40px;overflow-y:auto}
+.cards-grid{display:flex;flex-direction:column;gap:12px}
+
+/* ── PLACE CARD ── */
+.place-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color 0.25s,transform 0.25s;cursor:pointer;position:relative}
+.place-card:hover{border-color:rgba(255,255,255,0.14);transform:translateX(4px)}
+.place-card.highlighted{border-color:var(--fire2);box-shadow:0 0 0 1px var(--fire2)}
+.card-top{display:grid;grid-template-columns:1fr 1fr;height:220px}
+.card-photo{width:100%;height:220px;position:relative;overflow:hidden}
+.card-photo-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform 0.4s}
+.place-card:hover .card-photo-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform 0.4s}
+.card-photo-hint{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.12);text-align:center;padding:8px}
+.card-cat-badge{position:absolute;bottom:8px;left:8px;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:100px;color:white;font-weight:500}
+.card-info{padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between}
+.card-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.card-time-badge{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
+.card-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:-0.01em;line-height:1.1;margin-bottom:4px}
+.card-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.card-hook{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:rgba(242,237,228,0.45);line-height:1.55;margin-bottom:10px}
+.card-pills{display:flex;flex-wrap:wrap;gap:4px}
+.order-pill{font-size:10px;background:rgba(212,67,15,0.1);border:1px solid rgba(212,67,15,0.18);color:var(--fire2);padding:3px 8px;border-radius:4px}
+/* Expand */
+.card-expand-btn{width:100%;background:transparent;border:none;border-top:1px solid var(--border);padding:10px 16px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
+.card-expand-btn:hover{color:var(--cream);background:rgba(255,255,255,0.02)}
+.expand-arrow{transition:transform 0.3s}
+.card-expand-btn.open .expand-arrow{transform:rotate(180deg)}
+.card-expanded{max-height:0;overflow:hidden;transition:max-height 0.45s ease}
+.card-expanded.open{max-height:700px}
+.expanded-inner{padding:16px;display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border)}
+.exp-block{}
+.exp-label{font-size:8px;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:6px}
+.exp-label.orange{color:var(--fire2)}
+.exp-label.gold{color:var(--gold)}
+.exp-label.green{color:#5aad7a}
+.exp-text{font-size:12px;line-height:1.75;color:rgba(242,237,228,0.55)}
+.logistics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.log-cell{background:var(--card);padding:8px 12px}
+.log-label{font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.log-val{font-size:11px;font-weight:500;color:var(--cream)}
+.why-block{padding:12px 14px;border-left:2px solid var(--fire);background:rgba(212,67,15,0.04);border-radius:0 8px 8px 0}
+.why-block p{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;line-height:1.6;color:rgba(242,237,228,0.6)}
+.map-link-btn{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--fire2);border:1px solid rgba(212,67,15,0.25);padding:6px 12px;border-radius:100px;cursor:pointer;background:transparent;transition:all 0.2s;text-decoration:none}
+.map-link-btn:hover{background:rgba(212,67,15,0.1)}
+
+/* ── MAP SIDE ── */
+.map-side{position:sticky;top:60px;height:calc(100vh - 60px);display:flex;flex-direction:column;border-left:1px solid var(--border)}
+.map-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.map-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700}
+.kml-btn{display:flex;align-items:center;gap:6px;background:var(--fire);color:white;border:none;padding:8px 14px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.kml-btn:hover{background:var(--fire2);transform:translateY(-1px)}
+#map{flex:1;background:#1a1814}
+/* Leaflet overrides */
+.leaflet-container{background:#1a1814;font-family:'DM Sans',sans-serif}
+.leaflet-tile{filter:brightness(0.75) saturate(0.6)}
+.leaflet-control-zoom a{background:var(--card)!important;color:var(--cream)!important;border-color:var(--border)!important}
+.leaflet-popup-content-wrapper{background:var(--card);color:var(--cream);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5);padding:0;overflow:hidden}
+.leaflet-popup-tip{background:var(--card)}
+.leaflet-popup-content{margin:0;padding:0;min-width:200px}
+.popup-inner{padding:14px 16px}
+.popup-cat{font-size:8px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:6px}
+.popup-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+.popup-sub{font-size:11px;color:var(--muted);margin-bottom:8px}
+.popup-hook{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:rgba(242,237,228,0.5);line-height:1.5;margin-bottom:10px}
+.popup-scroll-btn{display:block;width:100%;background:var(--fire);border:none;color:white;padding:10px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+.popup-scroll-btn:hover{background:var(--fire2)}
+
+/* ── KML SUCCESS ── */
+.kml-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--fire);color:var(--cream);padding:12px 24px;border-radius:100px;font-size:12px;letter-spacing:0.1em;z-index:999;transition:transform 0.3s ease;white-space:nowrap}
+.kml-toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── PHILOSOPHY ── */
+.philosophy{padding:80px 40px;text-align:center;border-top:1px solid var(--border)}
+.phil-quote{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(18px,3vw,26px);line-height:1.55;color:rgba(242,237,228,0.55);max-width:560px;margin:0 auto 16px}
+.phil-attr{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--fire2)}
+
+/* ── CTA ── */
+.cta{padding:64px 40px;background:var(--card);border-top:1px solid var(--border)}
+.cta-title{font-family:'Syne',sans-serif;font-size:clamp(32px,6vw,56px);font-weight:800;line-height:1;letter-spacing:-0.02em;margin-bottom:14px}
+.cta-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--fire2)}
+.cta-body{font-size:14px;color:var(--muted);max-width:420px;line-height:1.7;margin-bottom:28px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--fire);color:white;border:none;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;padding:14px 28px;border-radius:100px;cursor:pointer;transition:all 0.2s;text-decoration:none}
+.cta-btn:hover{background:var(--fire2);transform:translateY(-2px)}
+
+/* ── FOOTER ── */
+footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-brand{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}
+.footer-brand span{color:var(--fire2)}
+.footer-tag{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:var(--muted)}
+
+/* ── EMPTY STATE ── */
+.empty-state{padding:48px;text-align:center;color:var(--muted)}
+.empty-state p{font-family:'Instrument Serif',serif;font-style:italic;font-size:16px}
+
+
+/* ── PHOTO CAROUSEL ── */
+.card-carousel{width:100%;margin-bottom:18px;position:relative}
+.carousel-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 0 10px 0;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.carousel-scroll::-webkit-scrollbar{display:none}
+.carousel-item{flex:0 0 160px;height:120px;border-radius:8px;overflow:hidden;position:relative;cursor:zoom-in;scroll-snap-align:start;transition:transform 0.2s}
+.carousel-item:hover{transform:scale(1.03)}
+.carousel-item img{width:100%;height:100%;object-fit:cover;display:block}
+.carousel-item-cap{position:absolute;bottom:0;left:0;right:0;padding:5px 8px;background:linear-gradient(transparent,rgba(0,0,0,0.7));font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.85)}
+
+
+/* ── LIGHTBOX ── */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column}
+#lightbox.open{display:flex}
+#lightbox-img{max-width:90vw;max-height:80vh;object-fit:contain;border-radius:6px;box-shadow:0 0 60px rgba(0,0,0,0.8)}
+#lightbox-cap{color:rgba(255,255,255,0.6);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;margin-top:14px}
+#lightbox-counter{color:rgba(255,255,255,0.3);font-size:9px;letter-spacing:0.1em;margin-top:6px}
+#lightbox-close{position:fixed;top:20px;right:24px;color:white;font-size:28px;cursor:pointer;opacity:0.6;transition:opacity 0.2s;line-height:1;background:none;border:none}
+#lightbox-close:hover{opacity:1}
+.lb-btn{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.lb-btn:hover{background:rgba(212,67,15,0.7)}
+#lb-prev{left:20px}
+#lb-next{right:20px}
+
+
+/* ── QUICK BADGES ── */
+.card-badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;font-size:9px;letter-spacing:0.08em;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.55);white-space:nowrap}
+.badge.yes{border-color:rgba(255,255,255,0.18);color:rgba(255,255,255,0.8)}
+.badge.no{opacity:0.35;text-decoration:line-through}
+.badge-price-1{color:#7bc67e;border-color:#7bc67e55}
+.badge-price-2{color:#f0c040;border-color:#f0c04055}
+.badge-price-3{color:#e07050;border-color:#e0705055}
+
+
+/* ── MOBILE ────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Layout */
+  .app-layout{grid-template-columns:1fr;grid-template-rows:auto}
+  .map-panel{display:none}
+  .cards-panel{height:auto;overflow:visible}
+
+  /* Header */
+  .site-header{padding:16px}
+  .header-inner{flex-direction:column;gap:10px;align-items:flex-start}
+  .header-right{width:100%;justify-content:flex-start}
+
+  /* Filters */
+  .filters{padding:10px 12px;gap:8px;flex-direction:column}
+  .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .filter-row::-webkit-scrollbar{display:none}
+  .f-btn{white-space:nowrap;flex-shrink:0;padding:6px 12px;font-size:9px}
+
+  /* Cards grid — single column on mobile */
+  .cards-grid{grid-template-columns:1fr;padding:12px;gap:12px}
+
+  /* Card */
+  .card-top{display:grid;grid-template-columns:1fr 1fr;height:220px}
+  .card-photo{width:100%;height:220px;position:relative;overflow:hidden}
+  .card-name{font-size:20px}
+  .card-info{padding:12px}
+  .card-hook{font-size:12px}
+  .card-badges{gap:4px}
+  .badge{font-size:8px;padding:3px 7px}
+
+  /* Expanded */
+  .expanded-inner{padding:12px}
+  .logistics{grid-template-columns:1fr 1fr}
+  .log-cell{padding:10px 12px}
+
+  /* Carousel */
+  .carousel-item{flex:0 0 130px;height:100px}
+
+  /* Lightbox */
+  #lightbox-img{max-width:95vw;max-height:70vh}
+  .lb-btn{width:36px;height:36px}
+  #lb-prev{left:8px}
+  #lb-next{right:8px}
+}
+
+@media (max-width: 400px) {
+  .card-top{display:grid;grid-template-columns:1fr 1fr;height:220px}
+  .card-photo{width:100%;height:220px;position:relative;overflow:hidden}
+  .card-name{font-size:20px}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .main-layout{grid-template-columns:1fr;grid-template-rows:auto}
+  .map-side{position:relative;top:0;height:360px;border-left:none;border-top:1px solid var(--border);order:-1}
+  .cards-side{padding:24px 20px}
+  .hero{padding:32px 20px}
+  .intro,.legend,.filter-bar,.results-count,.philosophy,.cta,footer{padding-left:20px;padding-right:20px}
+  .card-top{display:grid;grid-template-columns:1fr 1fr;height:220px}
+  .card-photo{width:100%;height:220px;position:relative;overflow:hidden}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-photo"><span>Add your hero photo — background:url('hero.jpg') center/cover no-repeat</span></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Fuoco · Field Guide No. 001</div>
+    <h1 class="hero-title">Chiang<br><em>Mai</em></h1>
+    <p class="hero-sub">For the serious eater. Not the tourist version.</p>
+    <div class="hero-bottom">
+      <span class="hero-tag">Street Food</span>
+      <span class="hero-tag">Producers</span>
+      <span class="hero-tag">Natural Wine</span>
+      <span class="hero-tag">Anti-Tourist</span>
+      <div class="hero-count" id="heroCount">48<span>Curated Places</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="intro fade-in">
+  <p>Every food blog covers Chiang Mai the <em>same way.</em> This is not that. These are the places a chef finds after <strong>months of eating, asking, and going back.</strong> No sponsors. No paid placements. No tourist queues. Filter by category, filter by time of day, then save everything directly to your Google Maps.</p>
+</div>
+
+<!-- LEGEND -->
+<div class="legend fade-in">
+  <span class="legend-label">Categories →</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--street)"></span>Street Food</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--sitdown)"></span>Sit Down</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--producer)"></span>Producers</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--coffee)"></span>Coffee</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--wine)"></span>Wine</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--bakery)"></span>Bakery</span>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-row">
+    <!-- Category filters -->
+    <button class="f-btn active" data-cat="all" onclick="setFilter('cat','all',this)">All</button>
+    <button class="f-btn" data-cat="street" onclick="setFilter('cat','street',this)">🌶 Street Food</button>
+    <button class="f-btn" data-cat="sitdown" onclick="setFilter('cat','sitdown',this)">🍽 Sit Down</button>
+    <button class="f-btn" data-cat="producer" onclick="setFilter('cat','producer',this)">🌿 Producers</button>
+    <button class="f-btn" data-cat="coffee" onclick="setFilter('cat','coffee',this)">☕ Coffee</button>
+    <button class="f-btn" data-cat="wine" onclick="setFilter('cat','wine',this)">🍷 Wine</button>
+    <button class="f-btn" data-cat="bakery" onclick="setFilter('cat','bakery',this)">🥐 Bakery</button>
+    <div class="filter-sep"></div>
+    <!-- Time filters -->
+    <button class="f-btn" data-time="morning" onclick="setFilter('time','morning',this)">🌅 Morning</button>
+    <button class="f-btn" data-time="afternoon" onclick="setFilter('time','afternoon',this)">☀️ Afternoon</button>
+    <button class="f-btn" data-time="evening" onclick="setFilter('time','evening',this)">🌙 Evening</button>
+    <button class="f-btn" data-time="allday" onclick="setFilter('time','allday',this)">⏰ All Day</button>
+  </div>
+</div>
+
+<div class="results-count" id="resultsCount">Showing all 8 places</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- CARDS -->
+  <div class="cards-side">
+    <div class="cards-grid" id="cardsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p>No places match this combination. Try adjusting your filters.</p>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-side">
+    <div class="map-header">
+      <div class="map-title">📍 All Places</div>
+      <button class="kml-btn" onclick="downloadKML()">⬇ Save to Google Maps</button>
+    </div>
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<!-- PHILOSOPHY -->
+<div class="philosophy fade-in">
+  <p class="phil-quote">"These places are not hidden. They are just not loud. The difference matters."</p>
+  <div class="phil-attr">— Fuoco, Chiang Mai Field Notes</div>
+</div>
+
+<!-- CTA -->
+<section class="cta fade-in">
+  <div class="cta-title">Want it built<br><em>just for you?</em></div>
+  <p class="cta-body">Your budget, your schedule, your obsessions. Chiang Mai or anywhere. We build personalized itineraries one by one — no templates, no copy-paste.</p>
+  <a href="/cdn-cgi/l/email-protection#3b535e5757547b5d4e545854154f495a4d5e57" class="cta-btn">Request a custom itinerary →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">FU<span>O</span>CO</div>
+  <div class="footer-tag">Food is a language of culture.</div>
+</footer>
+
+<!-- KML TOAST -->
+<div class="kml-toast" id="kmlToast">✓ File downloaded — import into Google Maps → Your places → Import</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── RENDER HELPERS ───────────────────────────────────────────────────────
+function cardBadges(p) {
+  const price = p.priceLevel === 1 ? '<span class="badge badge-price-1">💸 Cheap</span>'
+              : p.priceLevel === 2 ? '<span class="badge badge-price-2">💸💸 Mid</span>'
+              : p.priceLevel === 3 ? '<span class="badge badge-price-3">💸💸💸 Pricey</span>' : '';
+  const veg  = p.veg  ? '<span class="badge yes">🥬 Veg</span>' : '';
+  const vegan = p.vegan ? '<span class="badge yes" style="background:rgba(40,180,100,0.15);color:#4dbd84;border-color:rgba(40,180,100,0.3)">🌱 Vegan</span>' : '';
+  const fish = p.fish ? '<span class="badge yes">🐟 Seafood</span>' : '';
+  const meat = p.meat ? '<span class="badge yes">🥩 Meat</span>' : '';
+  const park = p.parking === true  ? '<span class="badge yes">🅿️ Parking</span>'
+             : '';
+  return '<div class="card-badges">' + price + veg + vegan + fish + meat + park + '</div>';
+}
+
+function cardPhoto(p) {
+  if (p.coverImg) {
+    return '<img src="data:image/jpeg;base64,' + p.coverImg + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;display:block">';
+  }
+  return '<div class="card-photo-hint">📸 Add photo</div>';
+}
+
+function cardGallery(p) {
+  if (!p.slides || !p.slides.length) return '';
+  const items = p.slides.map(function(s, i) {
+    return '<div class="carousel-item" onclick="event.stopPropagation();openLightbox(' + p.id + ',' + i + ')">' +
+      '<img src="data:image/jpeg;base64,' + s.img + '" alt="' + s.cap + '" loading="lazy">' +
+      '<div class="carousel-item-cap">' + s.cap + '</div>' +
+      '</div>';
+  }).join('');
+  return '<div class="card-carousel"><div class="carousel-scroll">' + items + '</div></div>';
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────
+const PLACES = [
+  // STREET FOOD (8)
+{id:1, name:"Chef Apple", local:"อาหารไทย", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["afternoon","evening"], timeLabel:"Lunch · Early Dinner", lat:18.7620, lng:98.9920,
+   price:"฿50–90", hours:"10:00–19:30 · ⚠ Call first", payment:"Cash · QR Code", address:"29/5 S. Chom Chan, Pa Daet, Mueang Chiang Mai", phone:"062 813 9322", instagram:"",
+   priceLevel:1, veg:true, vegan:false, fish:true, meat:true, parking:true,
+   hook:"One woman chef. One kitchen. No menu needed.",
+   orders:["Pad Thai Talay ⭐","Tom Yum Fried Rice Talay ⭐","Pad See Ew ⭐","Pork & Basil — Pork Belly","Northern Boat Soup"],
+   story:"A young Thai woman cooks northern Thai food the way someone does when they learned it from memory rather than a menu. The portions are generous. The prices sit somewhere between generous and absurd. Chef Apple is one of the most energetic and genuinely warm people you will meet in Chiang Mai.",
+   honest:"You are at a local street food place. Not for you if you need a proper restaurant kitchen or plated presentation. Two people cook and serve simultaneously. The food is exceptional for the price and the portion.",
+   hidden:"Always call before going — Chef Apple sometimes closes for family reasons without notice. Coriander is used in several dishes including khao soi. Mention it when ordering soups if you dislike it.",
+   why:"Someone chose to keep doing this — one kitchen, local prices, local ingredients — in a city increasingly designed around visitor expectations. That stubbornness is worth every baht.",
+   coverImg:"",
+   slides:[{cap:"Pad Thai Talay — Chef Apple\'s signature, made to order",img:""},{"cap":"Pad Thai Talay","img":""},{"cap":"Khao Soi","img":""},{"cap":"Som Tam","img":""},{"cap":"Pad See Ew","img":""},{"cap":"Tom Yum Fried Rice Talay","img":""},{"cap":"The Place — Evening","img":""},{"cap":"The Place — Day","img":""}],
+   photo:"street-apple.jpg"},
+{id:2, name:"Neng's Clay Oven Roasted Pork", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["afternoon","evening"], timeLabel:"Lunch · Dinner", lat:18.7920, lng:99.0055,
+   price:"฿80–150", hours:"10:30–22:00", payment:"Cash · QR Code",
+   address:"Rattanakosin Rd, Chang Moi, Mueang Chiang Mai",
+   phone:"082 766 4330", instagram:"", facebook:"https://www.facebook.com/profile.php?id=100063502747050",
+   priceLevel:1, veg:true, vegan:false, fish:true, meat:true, parking:true,
+   hook:"Pork hung over fire inside a clay urn. This is not a technique — it is a philosophy.",
+   orders:["Crispy Pork Belly ⭐","Grilled Chicken ⭐","Corn Salad","Pork Neck","Laotian Som Tam"],
+   story:"Neng has been doing this one thing — roasting pork and chicken inside enormous clay urns over live charcoal — long enough that it became an institution. The new location is bigger, indoor, air-conditioned. The technique is unchanged. The pork is slow-roasted until the fat melts and the collagen breaks down completely, then flash-finished to crisp the skin. The result is something most chefs spend years trying to understand.",
+   honest:"You can order directly from your phone via QR code on the table — no need to wait for a server. This place is genuinely famous and gets busy at lunch with both locals and tourists, so arrive early or be ready to wait. You are here for the grilled chicken and the crispy pork belly — these are the two things. Always order sticky rice on the side. The spice level is Thai spicy — if you are sensitive, ask for no spicy when ordering.",
+   hidden:"Order the Laotian Som Tam, not the standard papaya salad — less sweet, more fermented, more interesting. Ask to see the clay ovens before you leave. The cooking process is visible from the kitchen entrance and worth two minutes of your time.",
+   why:"Few places in Thailand still use this clay urn technique at this scale. If you care about food and how it is made, this is not optional.",
+   coverImg:"",
+   slides:[{cap:"Roasted Pork Belly",img:""},{"cap":"Clay Oven — The Technique","img":""},{"cap":"Crispy Pork Belly","img":""},{"cap":"Stir-fried Pork","img":""},{"cap":"The Full Spread","img":""},{"cap":"Corn Salad","img":""},{"cap":"The Kitchen","img":""},{"cap":"The Room","img":""}],
+   photo:"neng_oven"},
+{id:3, name:"Kaprao Nueanuea", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["evening"], timeLabel:"Evening", lat:18.7986, lng:98.9647,
+   price:"฿50–120", hours:"17:00–22:00", payment:"Cash · QR Code",
+   address:"Suthep Rd, Su Thep, Mueang Chiang Mai",
+   phone:"091 079 9824", instagram:"kapraonueanuea",
+   priceLevel:1, veg:false, fish:false, meat:true, parking:false,
+   hook:"One dish. Done for decades. The duck egg makes it.",
+   orders:["Kaprao + Duck Egg ⭐","Kaprao Wagyu ⭐","Kaprao Pork","Kaprao Chicken"],
+   story:"Pad Kaprao is one of the most eaten dishes in Thailand. Most places do it passably. Kaprao Nueanuea does only this — one dish, multiple proteins, one choice of egg — and they have been doing it long enough that it stopped being street food and became a destination. The stall sits in the university area near Suthep Road, outside, red tables, plastic stools, smoke in the air. The duck eggs here have deep orange yolks and a richness that makes the version with chicken egg feel like a different dish entirely.",
+   honest:"This is a street food stall — you eat outside at tables close together on the pavement. If you want comfort, this is not your place. The kitchen is open and loud and the service is fast. The dish is genuinely very spicy — even asking for less spicy can still deliver significant heat. If you are sensitive to chilli, ask for no spicy and mean it.",
+   hidden:"Always order with duck egg — it is what makes this version different. You can choose how many eggs: one, two, three, or four. The four-egg version is worth it. The wagyu option is a step up in richness and only ฿165.",
+   coverImg:"",
+   slides:[{cap:"Kaprao + Duck Egg",img:""},{"cap":"Duck Egg Kaprao ⭐","img":""},{"cap":"4 Duck Eggs — Maximum","img":""},{"cap":"Kaprao with Rice","img":""},{"cap":"The Kitchen at Night","img":""},{"cap":"The Stall","img":""},{"cap":"Street Seating","img":""}],
+   photo:"kaprao_egg2"},
+{id:4, name:"Khao Soi Khun Yai", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["morning","afternoon"], timeLabel:"Lunch only", lat:18.7940, lng:98.9925,
+   price:"฿50–80", hours:"10:00–14:00 · Closed Sunday", payment:"Cash · QR Code",
+   address:"Sri Poom 8 Alley, Si Phum, Mueang Chiang Mai",
+   phone:"090 651 7088", instagram:"",
+   priceLevel:1, veg:false, vegan:false, fish:false, meat:true, parking:false,
+   hook:"Grandma's khao soi. Four hours a day. The queue tells you everything.",
+   orders:["Khao Soi Chicken ⭐","Khao Soi Beef ⭐","Khao Soi Pork","Kanom Jeen Nam Ngiao"],
+   story:"Khun Yai means grandmother in Thai. This is a family-run spot tucked between two temples on Sri Poom Road, easy to walk past and impossible to forget once you have found it. The broth is the reason — fragrant, rich, perfectly balanced between coconut sweetness and curry depth. The crispy noodles on top are done better here than almost anywhere else in the city. Open four hours a day, six days a week, and consistently packed.",
+   honest:"Arrive before 11:30 or expect a queue. The portions are on the smaller side compared to other khao soi places in Chiang Mai — if you are hungry, order two bowls. You order at the counter first, get a number, then find a table. The system is fast once you understand it.",
+   hidden:"Order the Kanom Jeen Nam Ngiao — most visitors skip it because they came for khao soi, but this pork-based noodle soup with tomatoes and blood jelly is outstanding and rarely seen on tourist menus elsewhere. Also: the longan juice is made fresh and pairs perfectly with the curry broth.",
+   coverImg:"",
+   slides:[{cap:"Khao Soi",img:""},{"cap":"Khao Soi Chicken ⭐","img":""},{"cap":"The Full Table","img":""},{"cap":"Longan Juice","img":""},{"cap":"Nam Ngiao Noodles","img":""},{"cap":"The Stall","img":""},{"cap":"The Room","img":""}],
+   photo:"ksy_bowl"},
+{id:5, name:"Kaoneaw Mamuang Ayutthaya-Nong Hoi", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["afternoon","evening"], timeLabel:"Afternoon · Evening",
+   lat:18.7862, lng:99.0107,
+   price:"฿60–120", hours:"11:00–20:00", payment:"Cash · QR Code",
+   address:"330/7 Chiang Mai-Lamphun Rd, Wat Ket, Mueang Chiang Mai",
+   phone:"", instagram:"",
+   priceLevel:1, veg:true, vegan:true, fish:false, meat:false, parking:false,
+   hook:"The mango is always ripe. Always. That is not an accident — it is an obsession.",
+   orders:["Mango Sticky Rice ⭐","Brown Sticky Rice with Mango ⭐","Mango Box (plain)","Thai Sweets"],
+   story:"This pink stall on Chiang Mai-Lamphun Road has been selling mango sticky rice for decades and has never had a bad mango. That is not luck — the family selects the fruit personally, sources from trusted growers, and will not sell anything that is not at peak ripeness. The coconut cream soaked into the sticky rice is rich without being heavy. In mango season the queue stretches past the neighbouring shops.",
+   honest:"This is a takeaway place only — no seating, no tables. Grab your box and find a bench nearby. The mango box without sticky rice is just sliced mango at a very fair price and worth knowing about when you want fruit on the go.",
+   hidden:"Ask for the brown sticky rice version (ข้าวเหนียวดำ). It is not always on display but they usually have it — the nuttier, earthier rice changes the whole profile of the dish and most visitors never know it exists.",
+   coverImg:"",
+   slides:[{cap:"Mango Sticky Rice",img:""},{"cap":"Mango Sticky Rice ⭐","img":""},{"cap":"The Counter","img":""},{"cap":"Thai Sweets","img":""},{"cap":"Mango Box","img":""},{"cap":"The Stall","img":""}],
+   photo:"mango_sticky"},
+{id:6, name:"Ba Mee Man", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["evening"], timeLabel:"Evening · Late Night",
+   lat:18.7895, lng:99.0115,
+   price:"฿40–100", hours:"17:00–02:00", payment:"Cash · QR Code",
+   address:"Wat Ket, Mueang Chiang Mai",
+   phone:"086 920 1265", instagram:"",
+   priceLevel:1, veg:true, vegan:false, fish:false, meat:true, parking:false,
+   hook:"Yellow sign. Plastic stools. Late night egg noodles done right.",
+   orders:["Ba Mee with BBQ Pork ⭐","Pork Spare Rib Soup ⭐","Fried Wontons ⭐","Siu Mai","Wonton Noodle"],
+   story:"Ba Mee Man is a proper late-night street stall — the kind that opens when most places close and fills the pavement with plastic stools and the smell of pork bone broth. The egg noodles are springy and well-seasoned, the BBQ pork is sliced thick, and the spare rib soup is the kind of thing you want at midnight. The staff are friendly and fast, the prices are absurd in the best possible way, and the yellow sign glowing in the dark is hard to miss.",
+   honest:"You are eating on the street with traffic going past. Tables and stools are on the pavement, not in a restaurant. If that bothers you this is not your place — but the food and the atmosphere are completely worth it for anyone comfortable with real street dining. The place itself is clean.",
+   hidden:"Free tap water on every table — just help yourself. The fried wontons and siu mai are not on every table menu but are excellent as a starter while you wait for your noodles. Ask for them separately. Also look for the charcoal egg noodle — the noodles are made with activated charcoal, giving them a dark colour and a slightly different texture. Most people order the regular egg noodle without knowing this option exists. ",
+   coverImg:"",
+   slides:[{cap:"Ba Mee + BBQ Pork",img:""},{"cap":"Ba Mee with BBQ Pork ⭐","img":""},{"cap":"Pork Spare Rib Soup ⭐","img":""},{"cap":"Fried Wontons & Siu Mai ⭐","img":""},{"cap":"Clear Noodle with Pork","img":""},{"cap":"Wonton Noodle","img":""},{"cap":"The Street","img":""},{"cap":"The Stall","img":""}],
+   photo:"bmm_noodle_lift"},
+{id:7, name:"Kam-Paeng Sausage", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+   time:["morning","afternoon"], timeLabel:"Morning · Afternoon",
+   lat:18.7747, lng:98.9893,
+   price:"฿50–250", hours:"08:00–16:00", payment:"Cash · QR Code",
+   address:"185/18 Thipanet Rd, Haiya, Mueang Chiang Mai",
+   phone:"096 992 6242", instagram:"",
+   priceLevel:1, veg:false, vegan:false, fish:false, meat:true, parking:true,
+   hook:"The smoke hits you before you see the grill. That is how you find it.",
+   orders:["Sai Oua (Northern Sausage) ⭐","Pork Ribs ⭐","Pork Skin Crackling","Nam Prik Noom (Green Chili Dip)"],
+   story:"Kam-Paeng has been one of the go-to spots for sai oua in Chiang Mai for years. The sausages are made in-house — minced pork loaded with lemongrass, galangal, kaffir lime and chili, then grilled slowly over charcoal until the skin blisters and the fat renders through. Sold inside Kad Manee market with parking, open from morning until the afternoon. The smell from the grill is the only sign you need.",
+   honest:"They close at 16:00 and sell out before that on busy days — go before noon to be safe. Note that Kad Manee market has a night market nearby in the evening, but Kam-Paeng itself closes early afternoon. If you are coming specifically for the sausage, morning is your best window.",
+   hidden:"The nam prik noom — green roasted chili dip — is made in-house and sold in jars to take home. It is one of the best versions in the city and most visitors walk past it without noticing. Also worth buying extra sai oua vacuum-packed to take home or to your accommodation.",
+   coverImg:"",
+   slides:[{cap:"Sai Oua",img:""},{"cap":"Sai Oua on the Grill ⭐","img":""},{"cap":"Sai Oua & Pork Ribs ⭐","img":""},{"cap":"The Full Counter","img":""},{"cap":"Grilling Everything","img":""},{"cap":"The Shop","img":""}],
+   photo:"kps_grill1"},
+{id:8, name:"Cherng Doi Roast Chicken", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+ time:["afternoon","evening"], timeLabel:"Lunch · Dinner",
+ lat:18.7964, lng:98.9681, price:"฿50–100", hours:"11:00–20:00 · Closed Monday", payment:"Cash · QR Code",
+ address:"2/8 Suk Kasame Rd, Su Thep, Mueang Chiang Mai", phone:"081 881 1407",
+ instagram:"", facebook:"https://www.facebook.com/Kaiyangcherngdoi2",
+ priceLevel:1, veg:true, vegan:false, fish:false, meat:true, parking:true,
+ hook:"Michelin Bib Gourmand. Boneless grilled chicken with skin so crispy it shatters. Hidden in a garden off Nimman.",
+ orders:["Roast Chicken ⭐","Pork Jowl ⭐","Fried Papaya Salad"],
+ story:"Tucked down a soi off Nimmanhaemin, Cherng Doi looks like a family compound that became a restaurant by accident — teak tables, garden lighting, a fan cooling the outdoor terrace. The chicken is grilled directly over flame, not rotisserie. Boneless breast, skin crisped until it shatters, tamarind dipping sauce with a sour-sweet pull that makes you go back for more. Michelin noticed years ago. The locals were there first.",
+ honest:"It gets busy at dinner — arrive before 18:00 or expect a wait. Portions are on the smaller side, but the menu is built to share. The Isaan-style som tam with fermented crab is funky and divisive — know what you are ordering.",
+ hidden:"The Som Tam Tod — fried shredded papaya served with a spicy dip. Most visitors don't know it exists and order plain som tam instead. It is the sleeper hit of the menu.",
+ coverImg:"",
+ slides:[{cap:"The Full Spread",img:""},{cap:"Pork Jowl Steak — charred edges, tamarind chilli dip",img:""},{cap:"Roast chicken — boneless, crispy skin",img:""},{cap:"Som Tam Corn — sweet corn salad, no fermented fish",img:""},{cap:"Som Tam Tod — fried shredded papaya, the one people miss",img:""},{cap:"Som Tam Poo — Isaan style with fermented crab",img:""},{cap:"Garden terrace at dusk — warm lights, teak wood",img:""},{cap:"The entrance — easy to walk past, look for the elephant",img:""}]},
+{id:9, name:"Talung Southern Thai", cat:"sitdown", catLabel:"Sit Down", catColor:"var(--sitdown)",
+ time:["afternoon","evening"], timeLabel:"Lunch · Dinner",
+ lat:18.8237, lng:98.9863,
+ price:"฿200–400", hours:"10:30–21:00", payment:"Cash · QR Code · Card",
+ address:"8 Chotana Rd Soi 12, Chang Phueak, Mueang Chiang Mai",
+ phone:"083 578 4948",
+ instagram:"talungcnx", facebook:"https://www.facebook.com/TALUNGCNX/",
+ priceLevel:2, veg:true, vegan:false, fish:true, meat:true, parking:false,
+ hook:"Southern Thai cooking in the north. Bold, funky, unapologetic — and a wine list that surprises.",
+ orders:["Braised Pork Belly ⭐","Squid Ink Stir-Fry ⭐","Stir-Fried Prawns with Stink Beans ⭐"],
+ story:"Southern Thai food in Chiang Mai is rare. Talung is the real thing — run by a family from the south, cooking recipes that don't travel well and usually don't leave home. The braised pork belly is a grandfather's recipe, slow-cooked in spices until the fat collapses into the sauce. The squid ink stir-fry turns heads at every table. The owner is a serious wine collector — the rack against the wall holds bottles with age on them.",
+ honest:"Not easy to find — Chotana Soi 12, north of the city, no foot traffic. You have to want it. This is a place for locals — very few expats know it exists. The couple who run it will come to your table and talk to you like you've been coming for years. They just opened a second spot two streets away serving central Thai food.",
+ hidden:"Ask about the wine. The owner keeps a personal cellar with bottles going back 10+ years — some available by the glass, some by arrangement. Nobody else in this price range offers this.",
+ coverImg:"",
+ slides:[{cap:"Braised Pork Belly",img:""},{cap:"Stir-fried prawns with stink beans & southern shrimp paste",img:""},{cap:"Squid stir-fried in its own ink — the dish ",img:""},{cap:"Goong Pad Nam Makham",img:""},{cap:"Yellow curry crab — rich, egg-coated, deeply southern",img:""},{cap:"Steamed crab curry in banana leaf",img:""},{cap:"The yellow frontage on Chotana Soi 12",img:""},{cap:"Inside — cool, calm, wine rack against the wall",img:""}]},
+  {id:10, name:"Tong Tem Toh", cat:"sitdown", catLabel:"Sit Down", catColor:"var(--sitdown)",
+   time:["evening"], timeLabel:"Evening",
+   lat:18.7978, lng:98.9739, price:"฿150–300", hours:"18:00–22:00 daily", payment:"Cash · QR · Card",
+   address:"11 Nimmana Haeminda Soi 13, Su Thep, Mueang Chiang Mai", phone:"+66 53 894 701",
+   instagram:"", facebook:"",
+   priceLevel:2, veg:true, vegan:false, fish:false, meat:true, parking:false,
+   hook:"Northern Thai food the way it was cooked before restaurants existed.",
+   orders:["Burmese Pork Curry ⭐","Grilled Pork Belly ⭐","Nam Prik Platter ⭐","Sai Oua"],
+   story:"Tong Tem Toh — TTT to regulars — is the benchmark for Lanna cuisine in Chiang Mai. Open-air, dark wood benches, mist machines overhead, the smell of charcoal grilling pork neck drifting into the street before you even find the entrance. The menu is massive: soups, curries, salads, fermented things, grilled things. Come hungry and order aggressively. Grilled items only at dinner.",
+   honest:"It is popular — queue is part of the deal. Download QueQ to book your spot in line before you arrive. Worth every minute of the wait.",
+   hidden:"The nam prik platter — northern chilli dips with pork rinds and raw vegetables — is served in turtle-shaped ceramic dishes. Order it first. It sets the tone for everything that follows.",
+   coverImg:"",
+   slides:[
+     {cap:"Nam Prik Dips",img:""},
+     {cap:"Burmese Pork Curry",img:""},
+     {cap:"The Full Table",img:""},
+     {cap:"Grilled Pork Belly",img:""}
+   ]}
+,
+  {id:11, name:"Maadae Slow Fish Kitchen", cat:"sitdown", catLabel:"Sit Down", catColor:"var(--sitdown)",
+   time:["afternoon","evening"], timeLabel:"Lunch · Dinner",
+   lat:18.7879, lng:99.0013, price:"฿300–600", hours:"11:00–14:00 · 17:00–22:00 · Closed Wednesday",
+   payment:"Cash · QR · Card",
+   address:"86-88 Tha Phae Road, Chang Moi, Mueang Chiang Mai", phone:"092 669 0514",
+   instagram:"maadae.slowfish", facebook:"",
+   priceLevel:2, veg:true, vegan:false, fish:true, meat:false, parking:false,
+   hook:"Fresh fish from southern fishermen, grilled over charcoal on Tha Phae Road every night.",
+   orders:["Grilled Fish of the Day ⭐","Pomelo Fish Salad ⭐","Fish Chuchee Curry ⭐","Crab Ceviche","Squid Ink Stir-Fry"],
+   story:"Started during Covid to support sustainable fishing communities in Chumphon, southern Thailand. The menu changes daily based on what arrived — whole mackerel, trevally, snapper, kingfish. Everything cooked over charcoal in an open kitchen right on the street, smoke drifting into the Thapae East arts district. Order the fish. Order the pomelo salad. Order whatever the kitchen tells you is good that day.",
+   honest:"Reservation is not optional — walk-ins get turned away regularly, especially on weekends. Book through Google Maps or call ahead. Budget ฿600–900 per person.",
+   hidden:"The homemade cola sounds like a gimmick — it is not. Also: the mead from Daydrinker's Collective, brewed in Chiang Dao. Order both and you will understand why this place became a whole scene, not just a restaurant.",
+   coverImg:"",
+   slides:[
+     {cap:"Grilled Fish of the Day",img:""},
+     {cap:"Pomelo Fish Salad",img:""},
+     {cap:"Fish Chuchee Curry",img:""},
+     {cap:"Crab Ceviche",img:""},
+     {cap:"Squid Ink Stir-Fry",img:""},
+     {cap:"The Open Kitchen",img:""},
+     {cap:"Thapae East — The Scene",img:""},
+     {cap:"Maadae — Interior",img:""}
+   ]}];
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let activeFilters = { cat: 'all', time: null };
+let map, markers = [], allMarkers = [];
+
+// ── CAT CONFIG ───────────────────────────────────────────────────────────
+const CAT_CONFIG = {
+  street:   { label:'Street Food',    color:'#e85d3a', emoji:'🌶' },
+  sitdown:  { label:'Sit Down',       color:'#5b8ff0', emoji:'🍽' },
+  producer: { label:'Producers',      color:'#5aad7a', emoji:'🌿' },
+  coffee:   { label:'Coffee & Cafe',  color:'#c9a84c', emoji:'☕' },
+  wine:     { label:'Natural Wine',   color:'#9b6bb5', emoji:'🍷' },
+  bakery:   { label:'Bakery & Snacks',color:'#e8a43a', emoji:'🥐' },
+};
+
+// ── RENDER CARDS ────────────────────────────────────────────────────────
+function renderCards(places) {
+  const grid = document.getElementById('cardsGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('resultsCount');
+
+  if (places.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    count.textContent = 'No places match this filter combination';
+    return;
+  }
+  empty.style.display = 'none';
+  count.textContent = `Showing ${places.length} of ${PLACES.length} places`;
+
+  grid.innerHTML = places.map(p => {
+    const cc = CAT_CONFIG[p.cat];
+    const timeStr = Array.isArray(p.time) ? p.time.join(',') : p.time;
+    return `
+    <div class="place-card fade-in" id="card-${p.id}" style="position:relative;" data-id="${p.id}" data-cat="${p.cat}" data-time="${timeStr}" onclick="highlightFromCard(${p.id})">
+      <div class="card-top">
+        <div class="card-photo">
+          <div class="card-photo-inner" style="background:linear-gradient(135deg,${cc.color}22,${cc.color}11);overflow:hidden">
+            ${cardPhoto(p)}
+          </div>
+          <div class="card-cat-badge" style="background:${cc.color}">${cc.emoji} ${cc.label}</div>
+        </div>
+        <button class="card-photo-btn" onclick="event.stopPropagation();openPhotoPanel(${p.id})" style="position:absolute;top:8px;right:8px;z-index:10;background:rgba(14,13,11,0.82);border:1px solid #555;color:#c9a84c;font-size:9px;letter-spacing:0.1em;padding:5px 9px;cursor:pointer;font-family:Syne,sans-serif;text-transform:uppercase;">&#x1F4F7; Photos</button>
+        <div class="card-info">
+          <div>
+            <div class="card-meta">
+              <span class="card-time-badge">⏰ ${p.timeLabel}</span>
+            </div>
+            <div class="card-name">${p.name}</div>
+            <div class="card-sub">${p.price}</div>
+            <p class="card-hook">${p.hook}</p>
+            ${cardBadges(p)}
+          </div>
+          <div class="card-pills">
+            ${p.orders.map(o => `<span class="order-pill">${o}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      <button class="card-expand-btn" onclick="event.stopPropagation();toggleExpand(this,${p.id})">
+        <span>The full story</span>
+        <span class="expand-arrow">↓</span>
+      </button>
+      <div class="card-expanded" id="exp-${p.id}">
+        <div class="expanded-inner">
+          ${cardGallery(p)}
+          <div class="exp-block">
+            <div class="exp-label orange">— The Story</div>
+            <p class="exp-text">${p.story}</p>
+          </div>
+          <div class="exp-block">
+            <div class="exp-label gold">— The Honest Part</div>
+            <p class="exp-text">${p.honest}</p>
+          </div>
+          <div class="exp-block">
+            <div class="exp-label green">— What Nobody Writes About</div>
+            <p class="exp-text">${p.hidden}</p>
+          </div>
+          <div class="logistics">
+            <div class="log-cell"><div class="log-label"><span class="log-icon">💸</span>Price</div><div class="log-val">${p.price}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">🕐</span>Hours</div><div class="log-val">${p.hours}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">💳</span>Payment</div><div class="log-val">${p.payment}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">📍</span>Address</div><div class="log-val">${p.address ? '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address) + '" target="_blank" style="color:var(--fire2);text-decoration:none">' + p.address + ' ↗</a>' : p.howto}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">📞</span>Phone</div><div class="log-val">${p.phone ? '<a href="tel:' + p.phone + '" style="color:var(--fire2);text-decoration:none">' + p.phone + '</a>' : '—'}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">📸</span>Social</div><div class="log-val">${p.instagram ? '<a href="https://instagram.com/' + p.instagram + '" target="_blank" style="color:var(--fire2);text-decoration:none">@' + p.instagram + ' ↗</a>' : p.facebook ? '<a href="' + p.facebook + '" target="_blank" style="color:var(--fire2);text-decoration:none">Facebook ↗</a>' : 'N/A'}</div></div>
+          </div>
+          <button class="map-link-btn" onclick="event.stopPropagation();flyToPin(${p.id})">📍 Show on map</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Observe fade-ins
+  document.querySelectorAll('.place-card.fade-in').forEach((el,i) => {
+    setTimeout(() => el.classList.add('visible'), i * 40);
+  });
+}
+
+// ── FILTER ───────────────────────────────────────────────────────────────
+function setFilter(type, val, btn) {
+  activeFilters[type] = (activeFilters[type] === val && val !== 'all') ? null : val;
+  if (type === 'cat' && val === 'all') activeFilters.cat = 'all';
+
+  // Update button states
+  document.querySelectorAll(`.f-btn[data-${type}]`).forEach(b => b.classList.remove('active'));
+  if (activeFilters[type]) btn.classList.add('active');
+  if (type === 'cat' && val === 'all') btn.classList.add('active');
+
+  applyFilters();
+}
+
+function applyFilters() {
+  const filtered = PLACES.filter(p => {
+    const catOk = activeFilters.cat === 'all' || p.cat === activeFilters.cat;
+    const timeOk = !activeFilters.time || (Array.isArray(p.time) ? p.time.includes(activeFilters.time) : p.time === activeFilters.time);
+    return catOk && timeOk;
+  });
+  renderCards(filtered);
+  updateMapMarkers(filtered);
+}
+
+// ── EXPAND ───────────────────────────────────────────────────────────────
+function toggleExpand(btn, id) {
+  const exp = document.getElementById(`exp-${id}`);
+  const isOpen = exp.classList.contains('open');
+  exp.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('span:first-child').textContent = isOpen ? 'The full story' : 'Close';
+}
+
+// ── MAP ───────────────────────────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', {
+    center: [18.7883, 98.9853],
+    zoom: 13,
+    zoomControl: true,
+    attributionControl: false,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  PLACES.forEach(p => {
+    const cc = CAT_CONFIG[p.cat];
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:28px;height:28px;border-radius:50%;background:${cc.color};border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,0.5);cursor:pointer">${cc.emoji}</div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+
+    const marker = L.marker([p.lat, p.lng], { icon })
+      .addTo(map)
+      .bindPopup(`
+        <div class="popup-inner">
+          <div class="popup-cat" style="color:${cc.color}">${cc.emoji} ${cc.label}</div>
+          <div class="popup-name">${p.name}</div>
+          <div class="popup-sub">${p.local} · ${p.price} · ${p.timeLabel}</div>
+          <div class="popup-hook">${p.hook}</div>
+        </div>
+        <button class="popup-scroll-btn" onclick="scrollToCard(${p.id})">See full entry ↓</button>
+      `, { maxWidth: 240, className: '' });
+
+    marker.on('click', () => highlightCard(p.id));
+    markers.push({ id: p.id, marker, cat: p.cat, time: p.time });
+  });
+
+  allMarkers = [...markers];
+}
+
+function updateMapMarkers(visiblePlaces) {
+  const visibleIds = new Set(visiblePlaces.map(p => p.id));
+  markers.forEach(({ id, marker }) => {
+    if (visibleIds.has(id)) {
+      if (!map.hasLayer(marker)) map.addLayer(marker);
+    } else {
+      if (map.hasLayer(marker)) map.removeLayer(marker);
+    }
+  });
+}
+
+function flyToPin(id) {
+  const p = PLACES.find(x => x.id === id);
+  const m = markers.find(x => x.id === id);
+  if (!p || !m) return;
+  map.flyTo([p.lat, p.lng], 16, { duration: 1 });
+  setTimeout(() => m.marker.openPopup(), 1000);
+  // On mobile, scroll to map
+  if (window.innerWidth < 900) {
+    document.querySelector('.map-side').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function highlightCard(id) {
+  document.querySelectorAll('.place-card').forEach(c => c.classList.remove('highlighted'));
+  const card = document.getElementById(`card-${id}`);
+  if (card) {
+    card.classList.add('highlighted');
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function highlightFromCard(id) {
+  const p = PLACES.find(x => x.id === id);
+  const m = markers.find(x => x.id === id);
+  if (!p || !m) return;
+  if (map.hasLayer(m.marker)) {
+    map.flyTo([p.lat, p.lng], 15, { duration: 0.8 });
+    m.marker.openPopup();
+  }
+}
+
+function scrollToCard(id) {
+  const card = document.getElementById(`card-${id}`);
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('highlighted');
+    setTimeout(() => card.classList.remove('highlighted'), 2000);
+  }
+}
+
+// ── KML DOWNLOAD ─────────────────────────────────────────────────────────
+function downloadKML() {
+  const visiblePlaces = PLACES.filter(p => {
+    const catOk = activeFilters.cat === 'all' || p.cat === activeFilters.cat;
+    const timeOk = !activeFilters.time || (Array.isArray(p.time) ? p.time.includes(activeFilters.time) : p.time === activeFilters.time);
+    return catOk && timeOk;
+  });
+
+  const icons = {
+    street:   'http://maps.google.com/mapfiles/kml/paddle/red-circle.png',
+    sitdown:  'http://maps.google.com/mapfiles/kml/paddle/blu-circle.png',
+    producer: 'http://maps.google.com/mapfiles/kml/paddle/grn-circle.png',
+    coffee:   'http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png',
+    wine:     'http://maps.google.com/mapfiles/kml/paddle/purple-circle.png',
+    bakery:   'http://maps.google.com/mapfiles/kml/paddle/orange-circle.png',
+  };
+
+  const nm = 'name';
+  const placemarks = visiblePlaces.map(p => [
+    '<Placemark>',
+    '<' + nm + '>FUOCO: ' + p.name + '</' + nm + '>',
+    '<description><![CDATA[',
+    '<b>' + (CAT_CONFIG[p.cat] ? CAT_CONFIG[p.cat].label : p.cat) + '</b> · ' + p.price + '<br>',
+    '<i>' + p.hook + '</i><br><br>',
+    '<b>Order:</b> ' + p.orders.join(', ') + '<br>',
+    '<b>Hours:</b> ' + p.hours + '<br>',
+    '<b>Payment:</b> ' + p.payment,
+    ']]></description>',
+    '<Style><IconStyle><Icon><href>' + (icons[p.cat] || icons.street) + '</href></Icon></IconStyle></Style>',
+    '<Point><coordinates>' + p.lng + ',' + p.lat + ',0</coordinates></Point>',
+    '</Placemark>'
+  ].join('\n')).join('\n');
+
+  const docName = 'name';
+  const kml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<kml xmlns="http://www.opengis.net/kml/2.2">\n' +
+    '<Document>\n' +
+    '<' + docName + '>FUOCO - Chiang Mai Field Guide</' + docName + '>\n' +
+    '<description>Curated places for the serious eater.</description>\n' +
+    placemarks + '\n' +
+    '</Document>\n</kml>';
+
+  const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'FUOCO-ChiangMai.kml';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  const toast = document.getElementById('kmlToast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ── SCROLL ANIMATIONS ────────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+
+// ── GALLERY (carousel — no state needed) ────────────────────────────────
+
+
+// ── LIGHTBOX ─────────────────────────────────────────────────────────────
+let lbPlaceId = null, lbIndex = 0;
+
+function openLightbox(placeId, idx) {
+  lbPlaceId = placeId;
+  lbIndex = idx;
+  lbShow();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function lbShow() {
+  const place = PLACES.find(p => p.id === lbPlaceId);
+  if (!place || !place.slides) return;
+  const slide = place.slides[lbIndex];
+  document.getElementById('lightbox-img').src = 'data:image/jpeg;base64,' + slide.img;
+  document.getElementById('lightbox-cap').textContent = slide.cap;
+  document.getElementById('lightbox-counter').textContent = (lbIndex + 1) + ' / ' + place.slides.length;
+}
+
+function lbMove(dir) {
+  const place = PLACES.find(p => p.id === lbPlaceId);
+  if (!place) return;
+  lbIndex = (lbIndex + dir + place.slides.length) % place.slides.length;
+  lbShow();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lbClose(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+}
+
+document.addEventListener('keydown', function(e) {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'ArrowRight') lbMove(1);
+  if (e.key === 'ArrowLeft') lbMove(-1);
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('heroCount').innerHTML = `${PLACES.length}<span>Curated Places</span>`;
+  renderCards(PLACES);
+  initMap();
+});
+</script>
+
+<div id="lightbox" onclick="lbClose(event)">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-btn" id="lb-prev" onclick="event.stopPropagation();lbMove(-1)">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lb-btn" id="lb-next" onclick="event.stopPropagation();lbMove(1)">&#8250;</button>
+  <div id="lightbox-cap"></div>
+  <div id="lightbox-counter"></div>
+</div>
+
+
+<!-- FUOCO PHOTO PANEL -->
+<div id="photo-panel" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.93);overflow-y:auto;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="width:100%;max-width:500px;background:#1a1917;padding:40px;font-family:DM Sans,sans-serif;color:#f2ede4;margin:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <span id="photo-panel-title" style="font-family:Syne,sans-serif;font-size:16px;letter-spacing:0.15em;color:#d4430f;">ADD PHOTOS</span>
+      <button onclick="document.getElementById('photo-panel').style.display='none'" style="background:none;border:none;color:#f2ede4;font-size:26px;cursor:pointer;">&#x2715;</button>
+    </div>
+    <p style="font-size:13px;color:#888;margin-bottom:20px;line-height:1.6;">First photo = cover image shown on the card.<br>All others appear in the gallery carousel.</p>
+    <input type="file" id="photo-input" accept="image/*" multiple style="color:#f2ede4;font-size:13px;display:block;margin-bottom:16px;">
+    <div id="photo-previews" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;"></div>
+    <div id="photo-status" style="font-size:13px;color:#c9a84c;margin-bottom:16px;min-height:20px;"></div>
+    <button onclick="fuocoSavePhotos()" style="width:100%;background:#d4430f;color:#f2ede4;border:none;padding:14px;font-family:Syne,sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;margin-bottom:12px;">SAVE PHOTOS</button>
+    <button onclick="fuocoDownload()" id="photo-download-btn" style="display:none;width:100%;background:#c9a84c;color:#0e0d0b;border:none;padding:14px;font-family:Syne,sans-serif;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">&#x2B07; DOWNLOAD UPDATED FILE</button>
+  </div>
+</div>
+
+<script>
+var photoTargetId = null;
+var photoB64s = [];
+
+function openPhotoPanel(placeId) {
+  photoTargetId = placeId;
+  photoB64s = [];
+  document.getElementById('photo-input').value = '';
+  document.getElementById('photo-previews').innerHTML = '';
+  document.getElementById('photo-status').textContent = '';
+  document.getElementById('photo-download-btn').style.display = 'none';
+  var place = PLACES.find(function(p){return p.id===placeId;});
+  document.getElementById('photo-panel-title').textContent = 'ADD PHOTOS — ' + (place ? place.name.toUpperCase() : '');
+  document.getElementById('photo-panel').style.display = 'flex';
+}
+
+function fuocoCompress(file, maxPx, q, cb) {
+  var r = new FileReader();
+  r.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var w = img.width, h = img.height;
+      if (w > maxPx) { h = Math.round(h*maxPx/w); w = maxPx; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      cb(canvas.toDataURL('image/jpeg',q).split(',')[1]);
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+document.getElementById('photo-input').addEventListener('change', function() {
+  photoB64s = [];
+  document.getElementById('photo-previews').innerHTML = '';
+  document.getElementById('photo-status').textContent = 'Compressing...';
+  var files = Array.from(this.files);
+  var done = 0;
+  files.forEach(function(file, i) {
+    var maxPx = i === 0 ? 400 : 600;
+    fuocoCompress(file, maxPx, 0.65, function(b64) {
+      photoB64s[i] = b64;
+      document.getElementById('photo-previews').innerHTML += '<img src="data:image/jpeg;base64,'+b64+'" style="height:70px;object-fit:cover;border:1px solid #444;">';
+      done++;
+      if (done === files.length) document.getElementById('photo-status').textContent = done + ' photos ready ✓';
+    });
+  });
+});
+
+function fuocoSavePhotos() {
+  if (!photoB64s.length) { document.getElementById('photo-status').textContent = 'Please select photos first'; return; }
+  var place = PLACES.find(function(p){return p.id===photoTargetId;});
+  if (!place) return;
+  place.coverImg = photoB64s[0];
+  place.slides = photoB64s.map(function(b64, i) {
+    return {cap: i===0 ? place.name : 'Photo '+i, img: b64};
+  });
+  if (typeof renderCards === 'function') renderCards(PLACES);
+  document.getElementById('photo-status').textContent = '✅ Photos saved! Download to keep them permanently.';
+  document.getElementById('photo-download-btn').style.display = 'block';
+}
+
+function fuocoDownload() {
+  var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  var blob = new Blob([html],{type:'text/html;charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FUOCO_ChiangMai_WORKING.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  document.getElementById('photo-status').textContent = 'Downloaded! This is your new master file.';
+}
+</script>
+</body>
+</html>
