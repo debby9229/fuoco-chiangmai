@@ -1001,11 +1001,11 @@ function renderCards(places) {
             <div class="log-cell"><div class="log-label"><span class="log-icon">💸</span>Price</div><div class="log-val">${p.price}</div></div>
             <div class="log-cell"><div class="log-label"><span class="log-icon">🕐</span>Hours</div><div class="log-val">${p.hours}</div></div>
             <div class="log-cell"><div class="log-label"><span class="log-icon">💳</span>Payment</div><div class="log-val">${p.payment}</div></div>
-            <div class="log-cell"><div class="log-label"><span class="log-icon">📍</span>Address</div><div class="log-val">${p.address ? '<a href="' + (p.mapsUrl || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address)) + '" target="_blank" style="color:var(--fire2);text-decoration:none">' + p.address + ' ↗</a>' : p.howto}</div></div>
+            <div class="log-cell"><div class="log-label"><span class="log-icon">📍</span>Address</div><div class="log-val">${p.address ? '<a href="https://www.google.com/maps?q=' + p.lat + ',' + p.lng + '" target="_blank" style="color:var(--fire2);text-decoration:none">' + p.address + ' ↗</a>' : p.howto}</div></div>
             <div class="log-cell"><div class="log-label"><span class="log-icon">📞</span>Phone</div><div class="log-val">${p.phone ? '<a href="tel:' + p.phone + '" style="color:var(--fire2);text-decoration:none">' + p.phone + '</a>' : '—'}</div></div>
             <div class="log-cell"><div class="log-label"><span class="log-icon">📸</span>Social</div><div class="log-val">${p.instagram ? '<a href="' + (p.instagram.startsWith('http') ? p.instagram : 'https://instagram.com/' + p.instagram) + '" target="_blank" style="color:var(--fire2);text-decoration:none">@' + (p.instagram.startsWith('http') ? p.instagram.replace(/.*instagram\.com\//,'').replace(/\//,'') : p.instagram) + ' ↗</a>' : p.facebook ? '<a href="' + p.facebook + '" target="_blank" style="color:var(--fire2);text-decoration:none">Facebook ↗</a>' : 'N/A'}</div></div>
           </div>
-          <button class="map-link-btn" onclick="event.stopPropagation();flyToPin(${p.id})">📍 Show on map</button>
+          <button class="map-link-btn" onclick="event.stopPropagation();window.open('https://www.google.com/maps?q='+${p.lat}+','+${p.lng},'_blank')">📍 Show on map</button>
         </div>
       </div>
     </div>`;
