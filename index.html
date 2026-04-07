@@ -315,7 +315,7 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
 <!-- LEGEND -->
 <div class="legend fade-in">
   <span class="legend-label">Categories →</span>
-  <span class="legend-item"><span class="legend-dot" style="background:var(--street)"></span>Street Food</span>
+  <span class="legend-item"><span class="legend-dot" style="background:var(--street)"></span>Local Food</span>
   <span class="legend-item"><span class="legend-dot" style="background:var(--sitdown)"></span>Sit Down</span>
   <span class="legend-item"><span class="legend-dot" style="background:var(--coffee)"></span>Coffee</span>
   <span class="legend-item"><span class="legend-dot" style="background:var(--wine)"></span>Wine</span>
@@ -327,7 +327,7 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
   <div class="filter-row">
     <!-- Category filters -->
     <button class="f-btn active" data-cat="all" onclick="setFilter('cat','all',this)">All</button>
-    <button class="f-btn" data-cat="street" onclick="setFilter('cat','street',this)">🌶 Street Food</button>
+    <button class="f-btn" data-cat="street" onclick="setFilter('cat','street',this)">🌶 Local Food</button>
     <button class="f-btn" data-cat="sitdown" onclick="setFilter('cat','sitdown',this)">🍽 Sit Down</button>
     <button class="f-btn" data-cat="coffee" onclick="setFilter('cat','coffee',this)">☕ Coffee</button>
     <button class="f-btn" data-cat="wine" onclick="setFilter('cat','wine',this)">🍷 Wine</button>
@@ -524,7 +524,7 @@ function cardGallery(p) {
 // ── DATA ──────────────────────────────────────────────────────────────────
 const PLACES = [
   // STREET FOOD (8)
-{id:1, name:"Chef Apple", local:"อาหารไทย", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:1, name:"Chef Apple", local:"อาหารไทย", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["lunch","dinner"], timeLabel:"Lunch · Dinner", lat:18.7620, lng:98.9920,
    price:"฿50–90", hours:"10:00–19:30 · ⚠ Call first", payment:"Cash · QR Code", address:"29/5 S. Chom Chan, Pa Daet, Mueang Chiang Mai", phone:"062 813 9322", instagram:"",
    priceLevel:1, veg:true, vegan:false, fish:true, meat:true, parking:true,
@@ -537,7 +537,7 @@ const PLACES = [
    coverImg:"listing-1-chef-apple-cover.webp",
    slides:[{img:"listing-1-chef-apple-2.webp",cap:"Ambience"},{img:"listing-1-chef-apple-3.webp",cap:"Khao Soi"},{img:"listing-1-chef-apple-4.webp",cap:"Som Tam"},{img:"listing-1-chef-apple-5.webp",cap:"Pad See Ew"},{img:"listing-1-chef-apple-6.webp",cap:"Ambience"},{img:"listing-1-chef-apple-7.webp",cap:"Tom Yum Fried Rice"}],
    photo:"street-apple.jpg"},
-{id:2, name:"Neng's Clay Oven Roasted Pork", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:2, name:"Neng's Clay Oven Roasted Pork", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["lunch","dinner"], timeLabel:"Lunch · Dinner", lat:18.7920, lng:99.0055,
    price:"฿80–150", hours:"10:30–22:00", payment:"Cash · QR Code",
    address:"Rattanakosin Rd, Chang Moi, Mueang Chiang Mai",
@@ -552,7 +552,7 @@ const PLACES = [
    coverImg:"listing-2-nengs-cover.webp",
    slides:[{img:"listing-2-nengs-2.webp",cap:"Salt and Chili Pork Belly"},{img:"listing-2-nengs-3.webp",cap:"Roasted Chicken and Sticky Rice"},{img:"listing-2-nengs-4.webp",cap:"Corn Salad"},{img:"listing-2-nengs-5.webp",cap:"Clay Oven Technique"},{img:"listing-2-nengs-6.webp",cap:"Ambience"}],
    photo:"neng_oven"},
-{id:3, name:"Kaprao Nueanuea", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:3, name:"Kaprao Nueanuea", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["dinner"], timeLabel:"Dinner", lat:18.7986, lng:98.9647,
    price:"฿50–120", hours:"17:00–22:00", payment:"Cash · QR Code",
    address:"Suthep Rd, Su Thep, Mueang Chiang Mai",
@@ -566,7 +566,7 @@ const PLACES = [
    coverImg:"listing-3-kaprao-nueanuea-cover.webp",
    slides:[{img:"listing-3-kaprao-nueanuea-2.webp",cap:"The Stand"},{img:"listing-3-kaprao-nueanuea-3.webp",cap:"Kaprao"},{img:"listing-3-kaprao-nueanuea-4.webp",cap:"Ambience"},{img:"listing-3-kaprao-nueanuea-5.webp",cap:"Kaprao Wagyu"},{img:"listing-3-kaprao-nueanuea-6.webp",cap:"Cooking Station"}],
    photo:"kaprao_egg2"},
-{id:4, name:"Khao Soi Khun Yai", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:4, name:"Khao Soi Khun Yai", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["lunch"], timeLabel:"Lunch", lat:18.7940, lng:98.9925,
    price:"฿50–80", hours:"10:00–14:00 · Closed Sunday", payment:"Cash · QR Code",
    address:"Sri Poom 8 Alley, Si Phum, Mueang Chiang Mai",
@@ -580,7 +580,7 @@ const PLACES = [
    coverImg:"listing-4-khao-soi-khun-yai-cover.webp",
    slides:[{img:"listing-4-khao-soi-khun-yai-2.webp",cap:"Kanom Jeen Nam Ngiao"},{img:"listing-4-khao-soi-khun-yai-3.webp",cap:"Khao Soi"},{img:"listing-4-khao-soi-khun-yai-4.webp",cap:"Longan Juice"},{img:"listing-4-khao-soi-khun-yai-5.webp",cap:""},{img:"listing-4-khao-soi-khun-yai-6.webp",cap:"Ambience"},{img:"listing-4-khao-soi-khun-yai-7.webp",cap:"Ambience"}],
    photo:"ksy_bowl"},
-{id:5, name:"Kaoneaw Mamuang Ayutthaya-Nong Hoi", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:5, name:"Kaoneaw Mamuang Ayutthaya-Nong Hoi", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["lunch","dinner"], timeLabel:"Take Away",
    lat:18.7862, lng:99.0107,
    price:"฿60–120", hours:"11:00–20:00", payment:"Cash · QR Code",
@@ -595,7 +595,7 @@ const PLACES = [
    coverImg:"listing-5-kaoneaw-mamuang-cover.webp",
    slides:[{img:"listing-5-kaoneaw-mamuang-2.webp",cap:"Mango Sticky Rice"},{img:"listing-5-kaoneaw-mamuang-3.webp",cap:"Mango Sticky Rice"},{img:"listing-5-kaoneaw-mamuang-4.webp",cap:"The Stand"},{img:"listing-5-kaoneaw-mamuang-5.webp",cap:"The Stand"}],
    photo:"mango_sticky"},
-{id:6, name:"Ba Mee Man", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:6, name:"Ba Mee Man", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["dinner"], timeLabel:"Dinner",
    lat:18.7895, lng:99.0115,
    price:"฿40–100", hours:"17:00–02:00", payment:"Cash · QR Code",
@@ -610,7 +610,7 @@ const PLACES = [
    coverImg:"listing-6-ba-mee-man-cover.webp",
    slides:[{img:"listing-6-ba-mee-man-2.webp",cap:"Char Siu"},{img:"listing-6-ba-mee-man-3.webp",cap:"Fried Wonton"},{img:"listing-6-ba-mee-man-4.webp",cap:"Wonton Noodle"},{img:"listing-6-ba-mee-man-5.webp",cap:"Ambience"},{img:"listing-6-ba-mee-man-6.webp",cap:"Ambience"},{img:"listing-6-ba-mee-man-7.webp",cap:"Pork Spare Ribs Soup"}],
    photo:"bmm_noodle_lift"},
-{id:7, name:"Kam-Paeng Sausage", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:7, name:"Kam-Paeng Sausage", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
    time:["lunch"], timeLabel:"Lunch",
    lat:18.7747, lng:98.9893,
    price:"฿50–250", hours:"08:00–16:00", payment:"Cash · QR Code",
@@ -625,7 +625,7 @@ const PLACES = [
    coverImg:"listing-7-kam-paeng-sausage-cover.webp",
    slides:[{img:"listing-7-kam-paeng-sausage-2.webp",cap:"Thai Sausage"},{img:"listing-7-kam-paeng-sausage-3.webp",cap:"Thai Sausage"},{img:"listing-7-kam-paeng-sausage-4.webp",cap:"Mix Grill"},{img:"listing-7-kam-paeng-sausage-5.webp",cap:"Ambience"},{img:"listing-7-kam-paeng-sausage-6.webp",cap:"Ambience"}],
    photo:"kps_grill1"},
-{id:8, name:"Cherng Doi Roast Chicken", cat:"street", catLabel:"Street Food", catColor:"var(--street)",
+{id:8, name:"Cherng Doi Roast Chicken", cat:"street", catLabel:"Local Food", catColor:"var(--street)",
  time:["lunch","dinner"], timeLabel:"Lunch · Dinner",
  lat:18.7964, lng:98.9681, price:"฿50–100", hours:"11:00–20:00 · Closed Monday", payment:"Cash · QR Code",
  address:"2/8 Suk Kasame Rd, Su Thep, Mueang Chiang Mai", phone:"081 881 1407",
@@ -959,7 +959,7 @@ let map, markers = [], allMarkers = [];
 
 // ── CAT CONFIG ───────────────────────────────────────────────────────────
 const CAT_CONFIG = {
-  street:   { label:'Street Food',    color:'#e85d3a', emoji:'🌶' },
+  street:   { label:'Local Food',    color:'#e85d3a', emoji:'🌶' },
   sitdown:  { label:'Sit Down',       color:'#5b8ff0', emoji:'🍽' },
   coffee:   { label:'Coffee & Cafe',  color:'#c9a84c', emoji:'☕' },
   wine:     { label:'Natural Wine',   color:'#9b6bb5', emoji:'🍷' },
