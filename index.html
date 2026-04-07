@@ -994,7 +994,7 @@ function renderCards(places) {
               ${ADMIN_MODE ? `<button onclick="event.stopPropagation();openPhotoPanel(${p.id})" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;font-size:8px;letter-spacing:0.1em;padding:3px 8px;cursor:pointer;font-family:Syne,sans-serif;text-transform:uppercase;border-radius:4px;white-space:nowrap;">&#x1F4F7; Photos</button>` : ''}
             </div>
             <div class="card-name">${p.name}</div>
-            <div class="card-sub">${p.price}</div>
+            <div class="card-sub">${['','$','$$','$$$'][p.priceLevel] || '$'}</div>
             ${cardBadges(p)}
           </div>
           <div class="card-pills">
