@@ -1244,7 +1244,7 @@ function lbShow() {
   const place = PLACES.find(p => p.id === lbPlaceId);
   if (!place || !place.slides) return;
   const slide = place.slides[lbIndex];
-  document.getElementById('lightbox-img').src = 'data:image/jpeg;base64,' + slide.img;
+  document.getElementById('lightbox-img').src = slide.img.includes('.') ? slide.img : 'data:image/jpeg;base64,' + slide.img;
   document.getElementById('lightbox-cap').textContent = slide.cap;
   document.getElementById('lightbox-counter').textContent = (lbIndex + 1) + ' / ' + place.slides.length;
 }
