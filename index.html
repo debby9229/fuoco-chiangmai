@@ -104,6 +104,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .card-sub{font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:0.04em;flex-shrink:0}
 .card-hook{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:rgba(242,237,228,0.55);line-height:1.5;margin-bottom:8px;flex-shrink:0}
 .card-pills{display:flex;flex-wrap:wrap;gap:4px;overflow:hidden;flex:1;align-content:flex-start}
+.card-info-grid{margin-top:10px;display:flex;flex-direction:column;gap:4px;font-size:11px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px}
+.cig-row{display:flex;gap:6px;align-items:baseline;line-height:1.4}
+.cig-label{color:rgba(255,255,255,0.4);white-space:nowrap;min-width:80px;flex-shrink:0}
+.cig-val{color:rgba(255,255,255,0.75)}
 .order-pill{font-size:9px;background:rgba(212,67,15,0.08);border:1px solid rgba(212,67,15,0.2);color:var(--fire2);padding:3px 8px;border-radius:4px;white-space:nowrap}
 /* Expand */
 .card-expand-btn{width:100%;background:transparent;border:none;border-top:1px solid var(--border);padding:10px 16px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
@@ -483,6 +487,20 @@ function cardPhoto(p) {
     return '<img src="' + src + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;display:block">';
   }
   return '<div class="card-photo-hint">📸 Add photo</div>';
+}
+
+function cardInfoGrid(p) {
+  const address = p.address ? '<a href="https://www.google.com/maps/search/' + encodeURIComponent(p.name) + '/@' + p.lat + ',' + p.lng + ',17z" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">' + p.address + ' ↗</a>' : (p.howto || '—');
+  const phone = p.phone ? '<a href="tel:' + p.phone + '" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">' + p.phone + '</a>' : '—';
+  const social = p.instagram ? '<a href="' + (p.instagram.startsWith('http') ? p.instagram : 'https://instagram.com/' + p.instagram) + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">@' + (p.instagram.startsWith('http') ? p.instagram.replace(/.*instagram\.com\//,'').replace(/\//,'') : p.instagram) + ' ↗</a>' : p.facebook ? '<a href="' + p.facebook + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Facebook ↗</a>' : '—';
+  return '<div class="card-info-grid">' +
+    '<div class="cig-row"><span class="cig-label">💸 Price</span><span class="cig-val">' + (p.price || '—') + '</span></div>' +
+    '<div class="cig-row"><span class="cig-label">🕐 Hours</span><span class="cig-val">' + (p.hours || '—') + '</span></div>' +
+    '<div class="cig-row"><span class="cig-label">💳 Payment</span><span class="cig-val">' + (p.payment || '—') + '</span></div>' +
+    '<div class="cig-row"><span class="cig-label">📍 Address</span><span class="cig-val">' + address + '</span></div>' +
+    '<div class="cig-row"><span class="cig-label">📞 Phone</span><span class="cig-val">' + phone + '</span></div>' +
+    '<div class="cig-row"><span class="cig-label">📸 Social</span><span class="cig-val">' + social + '</span></div>' +
+  '</div>';
 }
 
 function cardGallery(p) {
@@ -978,12 +996,12 @@ function renderCards(places) {
             </div>
             <div class="card-name">${p.name}</div>
             <div class="card-sub">${p.price}</div>
-            <p class="card-hook">${p.hook}</p>
             ${cardBadges(p)}
           </div>
           <div class="card-pills">
-            ${p.orders.map(o => `<span class="order-pill">${o}</span>`).join('')}
+            ${p.orders.slice(0,3).map(o => `<span class="order-pill">${o}</span>`).join('')}
           </div>
+          ${cardInfoGrid(p)}
         </div>
       </div>
       <button class="card-expand-btn" onclick="event.stopPropagation();toggleExpand(this,${p.id})">
