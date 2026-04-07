@@ -104,15 +104,16 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .card-name{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:6px;flex-shrink:0}
 .card-sub{font-size:11px;color:var(--muted);margin-bottom:10px;letter-spacing:0.04em;flex-shrink:0}
 .card-hook{font-family:'Instrument Serif',serif;font-style:italic;font-size:12px;color:rgba(242,237,228,0.55);line-height:1.5;margin-bottom:8px;flex-shrink:0}
-.card-pills{display:flex;flex-wrap:wrap;gap:2px;align-items:baseline;margin-bottom:0}
+.card-orders{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.orders-label{font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.card-pills{display:flex;flex-wrap:wrap;gap:5px}
 .card-info-grid{margin-top:14px;display:flex;flex-direction:column;gap:0;font-size:11px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px}
 .cig-row{display:grid;grid-template-columns:1fr 1fr;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);gap:12px}
 .cig-row:last-child{border-bottom:none}
 .cig-cell{display:flex;flex-direction:column;gap:2px;min-width:0}
 .cig-label{color:rgba(255,255,255,0.25);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
 .cig-val{color:rgba(255,255,255,0.85);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.order-pill{font-size:11px;color:var(--fire2);white-space:nowrap}
-.order-sep{color:rgba(255,255,255,0.2);font-size:11px}
+.order-pill{font-size:9px;background:rgba(212,67,15,0.08);border:1px solid rgba(212,67,15,0.25);color:var(--fire2);padding:3px 9px;border-radius:4px;white-space:nowrap}
 /* Expand */
 .card-expand-btn{width:100%;background:transparent;border:none;border-top:1px solid var(--border);padding:10px 16px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
 .card-expand-btn:hover{color:var(--cream);background:rgba(255,255,255,0.02)}
@@ -1000,8 +1001,11 @@ function renderCards(places) {
             <div class="card-name">${p.name}</div>
             ${cardBadges(p)}
           </div>
-          <div class="card-pills">
-            ${p.orders.slice(0,3).map(o => `<span class="order-pill">${o}</span>`).join('<span class="order-sep"> · </span>')}
+          <div class="card-orders">
+            <span class="orders-label">Must order</span>
+            <div class="card-pills">
+              ${p.orders.slice(0,3).map(o => `<span class="order-pill">${o}</span>`).join('')}
+            </div>
           </div>
           ${cardInfoGrid(p)}
         </div>
