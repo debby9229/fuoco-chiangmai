@@ -62,10 +62,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 /* ── FILTER BAR ── */
 .filter-bar{position:sticky;top:0;z-index:200;background:rgba(14,13,11,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px}
-.filter-row{display:flex;gap:6px;padding:14px 0;overflow-x:auto;scrollbar-width:none}
+.filter-row{display:flex;align-items:center;gap:6px;padding:14px 0;overflow-x:auto;scrollbar-width:none}
 .filter-row::-webkit-scrollbar{display:none}
-.filter-sep{width:1px;background:var(--border);margin:8px 4px;flex-shrink:0}
+.filter-sep{flex:1}
 .f-btn{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0}
+.f-btn[data-time]{border-style:dashed;font-size:9px;padding:5px 12px}
 .f-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--cream)}
 .f-btn.active{color:white;border-color:transparent}
 .f-btn[data-cat="all"].active{background:var(--fire)}
