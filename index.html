@@ -1302,10 +1302,9 @@ function initMap() {
     attributionControl: false,
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=1MDWuCUb7tTUAHsxfC6Y', {
     maxZoom: 19,
-    attribution: '© OpenStreetMap © CARTO',
-    subdomains: 'abcd'
+    attribution: '© MapTiler © OpenStreetMap contributors'
   }).addTo(map);
 
   PLACES.forEach(p => {
