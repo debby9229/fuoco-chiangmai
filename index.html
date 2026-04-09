@@ -1304,7 +1304,8 @@ function initMap() {
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     maxZoom: 19,
-    attribution: '© OpenStreetMap © CARTO'
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd'
   }).addTo(map);
 
   PLACES.forEach(p => {
