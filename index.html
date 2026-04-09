@@ -125,7 +125,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .cig-val{color:rgba(255,255,255,0.85);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .order-pill{font-size:9px;background:rgba(212,67,15,0.08);border:1px solid rgba(212,67,15,0.25);color:var(--fire2);padding:3px 9px;border-radius:4px;white-space:nowrap}
 .pill-short{display:none}.pill-full{display:inline}
-.handle-short{display:none}.handle-full{display:inline}
 /* Expand */
 .card-expand-btn{width:100%;background:transparent;border:none;border-top:1px solid var(--border);padding:10px 16px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
 .card-expand-btn:hover{color:var(--cream);background:rgba(255,255,255,0.02)}
@@ -263,7 +262,7 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
   .cig-cell{overflow:hidden;min-width:0;max-width:100%}
   .cig-val{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
   .pill-short{display:inline}.pill-full{display:none}
-  .handle-short{display:inline}.handle-full{display:none}
+
 }
 
 /* ── ADMIN EDIT ── */
@@ -532,10 +531,8 @@ function cardPhoto(p) {
 function cardInfoGrid(p) {
   const address = p.address ? '<a href="https://www.google.com/maps/search/' + encodeURIComponent(p.name) + '/@' + p.lat + ',' + p.lng + ',17z" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">' + p.address + ' ↗</a>' : (p.howto || '—');
   const phone = p.phone ? '<a href="tel:' + p.phone + '" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">' + p.phone + '</a>' : '—';
-  const _igHandle = p.instagram ? (p.instagram.startsWith('http') ? p.instagram.replace(/.*instagram\.com\//,'').replace(/\//,'') : p.instagram) : '';
   const _igUrl = p.instagram ? (p.instagram.startsWith('http') ? p.instagram : 'https://instagram.com/' + p.instagram) : '';
-  const _igShort = _igHandle.length > 12 ? _igHandle.slice(0, 12) + '…' : _igHandle;
-  const _igLink = p.instagram ? '<a href="' + _igUrl + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()"><span class="handle-full">@' + _igHandle + '</span><span class="handle-short">@' + _igShort + '</span> ↗️</a>' : '';
+  const _igLink = p.instagram ? '<a href="' + _igUrl + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Instagram ↗️</a>' : '';
   const _fbLink = p.facebook ? '<a href="' + p.facebook + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Facebook ↗️</a>' : '';
   const social = [_igLink, _fbLink].filter(Boolean).join(' · ') || '—';
   const cell = (emoji, label, val) => '<div class="cig-cell"><div class="cig-label-row"><span class="cig-emoji">' + emoji + '</span><span class="cig-label">' + label + '</span></div><span class="cig-val">' + val + '</span></div>';
