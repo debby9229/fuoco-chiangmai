@@ -323,7 +323,7 @@ footer{padding:32px 40px;border-top:1px solid var(--border);display:flex;justify
   <button id="hero-upload-btn" onclick="document.getElementById('hero-input').click()" style="display:none;position:absolute;top:16px;right:16px;z-index:10;background:rgba(14,13,11,0.82);border:1px solid #555;color:#c9a84c;font-size:9px;letter-spacing:0.1em;padding:6px 12px;cursor:pointer;font-family:Syne,sans-serif;text-transform:uppercase;border-radius:4px;">🖼 Hero Photo</button>
   <input type="file" id="hero-input" accept="image/*" style="display:none;" onchange="fuocoSetHero(this)">
   <div class="hero-content">
-    <h1 class="hero-title"><span class="hero-initial">C</span>hiang<br class="mobile-br"> <em>Mai</em></h1>
+    <h1 class="hero-title"><span id="hero-word-chiang"><span class="hero-initial">C</span>hiang</span><br class="mobile-br"> <em id="hero-word-mai">Mai</em></h1>
     <p class="hero-sub">The guide to where local people eat and drink.</p>
     <div class="hero-bottom">
 
@@ -1808,6 +1808,59 @@ document.addEventListener('keydown', function(e) {
     closeEditPanel();
   }
 });
+</script>
+
+<!-- ── FONT SIZE DEV TOOL ──────────────────────────────────────────────── -->
+<div id="font-dev-panel" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(14,13,11,0.97);border-top:1px solid #c9a84c;padding:16px 20px;font-family:Syne,sans-serif;color:#f2ede4;">
+  <div style="max-width:520px;margin:0 auto;">
+    <div style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:#c9a84c;margin-bottom:12px;">Hero Font Size Tool</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <label style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;width:52px;flex-shrink:0;">Chiang</span>
+        <input type="range" id="fdt-chiang" min="30" max="200" step="1" value="100" style="flex:1;min-width:120px;accent-color:#c9a84c;">
+        <span id="fdt-chiang-val" style="font-size:12px;color:#c9a84c;width:44px;text-align:right;flex-shrink:0;">100px</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;width:52px;flex-shrink:0;">Mai</span>
+        <input type="range" id="fdt-mai" min="30" max="200" step="1" value="100" style="flex:1;min-width:120px;accent-color:#c9a84c;">
+        <span id="fdt-mai-val" style="font-size:12px;color:#c9a84c;width:44px;text-align:right;flex-shrink:0;">100px</span>
+      </label>
+    </div>
+    <div style="margin-top:10px;font-size:9px;color:rgba(242,237,228,0.4);letter-spacing:0.08em;">Values are relative to the current clamp() size · changes are preview only</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('edit') !== 'true') return;
+
+  var panel = document.getElementById('font-dev-panel');
+  panel.style.display = 'block';
+  document.body.style.paddingBottom = (parseInt(document.body.style.paddingBottom)||0) + 90 + 'px';
+
+  var wChiang = document.getElementById('hero-word-chiang');
+  var wMai    = document.getElementById('hero-word-mai');
+
+  // Read computed base size once (resolves clamp)
+  var baseSize = parseFloat(window.getComputedStyle(document.querySelector('.hero-title')).fontSize);
+
+  function syncSlider(sliderId, valId, el) {
+    var slider = document.getElementById(sliderId);
+    var label  = document.getElementById(valId);
+    slider.value = Math.round(baseSize);
+    label.textContent = Math.round(baseSize) + 'px';
+    slider.addEventListener('input', function(){
+      var v = +this.value;
+      label.textContent = v + 'px';
+      el.style.fontSize = v + 'px';
+      el.style.lineHeight = 'inherit';
+    });
+  }
+
+  syncSlider('fdt-chiang', 'fdt-chiang-val', wChiang);
+  syncSlider('fdt-mai',    'fdt-mai-val',    wMai);
+})();
 </script>
 </body>
 </html>
