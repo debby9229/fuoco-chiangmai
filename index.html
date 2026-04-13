@@ -1329,6 +1329,7 @@ function csTouchStart(e) {
   _csTx = e.touches[0].clientX;
   _csTy = e.touches[0].clientY;
   e.stopPropagation();
+  e.stopImmediatePropagation();
 }
 function csTouchEnd(e, id) {
   e.stopPropagation();
