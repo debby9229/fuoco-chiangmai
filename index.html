@@ -1351,6 +1351,13 @@ function openFullStory(id) {
   var btn = document.querySelector('#card-' + id + ' .card-expand-btn');
   if (btn) toggleExpand(btn, id);
 }
+function closeFullStory(id) {
+  if (window.innerWidth > 768) return;
+  var exp = document.getElementById('exp-' + id);
+  if (!exp || !exp.classList.contains('open')) return;
+  var btn = document.querySelector('#card-' + id + ' .card-expand-btn');
+  if (btn) toggleExpand(btn, id);
+}
 
 // ── EXPAND ───────────────────────────────────────────────────────────────
 function toggleExpand(btn, id) {
