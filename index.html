@@ -1322,6 +1322,25 @@ function applyFilters() {
   updateMapMarkers(filtered);
 }
 
+// ── DOUBLE-TAP TO EXPAND (mobile) ────────────────────────────────────────
+var _tapTimes = {};
+function handleCardTap(id) {
+  if (window.innerWidth > 768) return;
+  var now = Date.now();
+  if (_tapTimes[id] && now - _tapTimes[id] < 350) {
+    openFullStory(id);
+    _tapTimes[id] = 0;
+  } else {
+    _tapTimes[id] = now;
+  }
+}
+function openFullStory(id) {
+  var exp = document.getElementById('exp-' + id);
+  if (!exp || exp.classList.contains('open')) return;
+  var btn = document.querySelector('#card-' + id + ' .card-expand-btn');
+  if (btn) toggleExpand(btn, id);
+}
+
 // ── EXPAND ───────────────────────────────────────────────────────────────
 function toggleExpand(btn, id) {
   const exp = document.getElementById(`exp-${id}`);
