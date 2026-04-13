@@ -1437,6 +1437,28 @@ function scrollToCard(id) {
 }
 
 
+// ── CAROUSEL ARROWS ──────────────────────────────────────────────────────
+function carouselScroll(id, dir) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const itemW = el.querySelector('.carousel-item') ? el.querySelector('.carousel-item').offsetWidth + 10 : 170;
+  el.scrollBy({ left: dir * itemW, behavior: 'smooth' });
+}
+function carouselUpdateBtns(el) {
+  const wrap = el.closest('.card-carousel');
+  if (!wrap) return;
+  const prev = wrap.querySelector('.carousel-btn.prev');
+  const next = wrap.querySelector('.carousel-btn.next');
+  if (prev) prev.disabled = el.scrollLeft < 8;
+  if (next) next.disabled = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+}
+// Init arrow states after cards render
+function initCarousels() {
+  document.querySelectorAll('.carousel-scroll').forEach(function(el) {
+    carouselUpdateBtns(el);
+  });
+}
+
 // ── SCROLL ANIMATIONS ────────────────────────────────────────────────────
 const observer = new IntersectionObserver(entries => {
   entries.forEach((e, i) => {
