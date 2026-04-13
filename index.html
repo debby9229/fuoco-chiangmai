@@ -572,7 +572,12 @@ function cardGallery(p) {
       '<div class="carousel-item-cap">' + s.cap + '</div>' +
       '</div>';
   }).join('');
-  return '<div class="card-carousel"><div class="carousel-scroll">' + items + '</div></div>';
+  const scrollId = 'cs-' + p.id;
+  return '<div class="card-carousel">' +
+    '<button class="carousel-btn prev" onclick="event.stopPropagation();carouselScroll(\'' + scrollId + '\',-1)" aria-label="Previous">‹</button>' +
+    '<div class="carousel-scroll" id="' + scrollId + '" onscroll="carouselUpdateBtns(this)">' + items + '</div>' +
+    '<button class="carousel-btn next" onclick="event.stopPropagation();carouselScroll(\'' + scrollId + '\',1)" aria-label="Next">›</button>' +
+    '</div>';
 }
 
 // ── DATA ──────────────────────────────────────────────────────────────────
