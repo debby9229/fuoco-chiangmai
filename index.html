@@ -1333,6 +1333,7 @@ function csTouchStart(e) {
 }
 function csTouchEnd(e, id) {
   e.stopPropagation();
+  e.stopImmediatePropagation();
   if (window.innerWidth > 768) return;
   var dx = e.changedTouches[0].clientX - _csTx;
   var dy = e.changedTouches[0].clientY - _csTy;
