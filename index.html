@@ -1324,12 +1324,18 @@ function applyFilters() {
 }
 
 // ── CAROUSEL SWIPE (mobile) ──────────────────────────────────────────────
-var _csTx = 0;
-function csTouchStart(e) { _csTx = e.touches[0].clientX; }
+var _csTx = 0, _csTy = 0;
+function csTouchStart(e) {
+  _csTx = e.touches[0].clientX;
+  _csTy = e.touches[0].clientY;
+  e.stopPropagation();
+}
 function csTouchEnd(e, id) {
+  e.stopPropagation();
   if (window.innerWidth > 768) return;
   var dx = e.changedTouches[0].clientX - _csTx;
-  if (Math.abs(dx) < 50) return;
+  var dy = e.changedTouches[0].clientY - _csTy;
+  if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
   e.preventDefault();
   carouselScroll(id, dx < 0 ? 1 : -1);
 }
