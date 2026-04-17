@@ -1,0 +1,24 @@
+{
+  "name": "FUOCO · Chiang Mai",
+  "short_name": "FUOCO",
+  "description": "Premium food guide to Chiang Mai — 40+ curated places",
+  "start_url": "/chiangmaiguide-fuoco/",
+  "display": "standalone",
+  "background_color": "#0e0a04",
+  "theme_color": "#d45000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
