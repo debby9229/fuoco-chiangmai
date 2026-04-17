@@ -1316,13 +1316,20 @@ function renderCards(places) {
 
 // ── FILTER ───────────────────────────────────────────────────────────────
 function setFilter(type, val, btn) {
-  activeFilters[type] = (activeFilters[type] === val && val !== 'all') ? null : val;
-  if (type === 'cat' && val === 'all') activeFilters.cat = 'all';
+  if (type === 'cat') {
+    activeFilters.cat = (activeFilters.cat === val && val !== 'all') ? 'all' : val;
+  } else {
+    activeFilters.time = (activeFilters.time === val) ? null : val;
+  }
 
   // Update button states
   document.querySelectorAll(`.f-btn[data-${type}]`).forEach(b => b.classList.remove('active'));
-  if (activeFilters[type]) btn.classList.add('active');
-  if (type === 'cat' && val === 'all') btn.classList.add('active');
+  if (type === 'cat') {
+    if (activeFilters.cat === 'all') document.querySelector('.f-btn[data-cat="all"]').classList.add('active');
+    else btn.classList.add('active');
+  } else {
+    if (activeFilters.time) btn.classList.add('active');
+  }
 
   applyFilters();
   const cs = document.querySelector('.cards-side');
