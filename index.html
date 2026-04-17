@@ -1895,6 +1895,27 @@ document.addEventListener('keydown', function(e) {
     closeEditPanel();
   }
 });
+
+// ── PWA INSTALL ────────────────────────────────────────────────────────────
+let _pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  const btn = document.getElementById('pwaInstallBtn');
+  if (btn) btn.classList.add('visible');
+});
+document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+  if (!_pwaPrompt) return;
+  _pwaPrompt.prompt();
+  const { outcome } = await _pwaPrompt.userChoice;
+  if (outcome === 'accepted') {
+    document.getElementById('pwaInstallBtn').classList.remove('visible');
+  }
+  _pwaPrompt = null;
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwaInstallBtn').classList.remove('visible');
+});
 </script>
 
 </body>
