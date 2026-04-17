@@ -1262,9 +1262,10 @@ function renderCards(places) {
         <div class="card-info">
           <div>
             <div class="card-meta" style="justify-content:space-between;">
-              <div style="display:flex;align-items:center;gap:6px;">
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                 <span class="card-time-badge">⏰ ${p.timeLabel}</span>
                 <span class="card-price-badge">${['','$','$$','$$$'][p.priceLevel] || '$'}</span>
+                ${closedBadge}
               </div>
               ${ADMIN_MODE ? `<button onclick="event.stopPropagation();openPhotoPanel(${p.id})" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#c9a84c;font-size:8px;letter-spacing:0.1em;padding:3px 8px;cursor:pointer;font-family:Syne,sans-serif;text-transform:uppercase;border-radius:4px;white-space:nowrap;">&#x1F4F7; Photos</button>` : ''}
             </div>
