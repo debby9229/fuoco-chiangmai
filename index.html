@@ -62,7 +62,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .pwa-btn:hover{background:rgba(212,83,0,0.28);border-color:rgba(212,83,0,0.6)}
 .pwa-btn.visible{display:flex}
 .pwa-btn .pwa-txt-mobile{display:none}.pwa-btn .pwa-txt-desktop{display:inline}
-@media(max-width:900px){.pwa-btn .pwa-txt-mobile{display:inline}.pwa-btn .pwa-txt-desktop{display:none}}
+@media(max-width:900px){
+  .pwa-btn{display:flex}
+  .pwa-btn .pwa-txt-mobile{display:inline}.pwa-btn .pwa-txt-desktop{display:none}
+}
+.pwa-ios-tip{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e1a12;border:1px solid rgba(212,83,0,0.4);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:13px;padding:14px 18px;border-radius:12px;z-index:9999;width:calc(100% - 40px);max-width:340px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.6);line-height:1.5}
+.pwa-ios-tip.show{display:block}
+.pwa-ios-tip strong{color:var(--fire2)}
+.pwa-ios-tip .tip-close{display:block;margin-top:10px;font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline}
 .hero-count span{font-size:10px;font-weight:400;color:var(--muted);display:block;letter-spacing:0.1em;text-transform:uppercase}
 
 /* ── INTRO ── */
