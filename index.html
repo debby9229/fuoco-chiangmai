@@ -578,7 +578,8 @@ function cardPhoto(p) {
 }
 
 function cardInfoGrid(p) {
-  const address = p.address ? '<a href="https://www.google.com/maps/search/' + encodeURIComponent(p.name) + '/@' + p.lat + ',' + p.lng + ',17z" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Map ↗️</a>' : (p.howto || '—');
+  const mapsHref = p.mapsurl ? p.mapsurl : 'https://www.google.com/maps/search/' + encodeURIComponent(p.name) + '/@' + p.lat + ',' + p.lng + ',17z';
+  const address = p.address ? '<a href="' + mapsHref + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Map ↗️</a>' : (p.howto || '—');
   const phone = p.phone ? '<a href="tel:' + p.phone + '" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">' + p.phone + '</a>' : '—';
   const _igUrl = p.instagram ? (p.instagram.startsWith('http') ? p.instagram : 'https://instagram.com/' + p.instagram) : '';
   const _igLink = p.instagram ? '<a href="' + _igUrl + '" target="_blank" style="color:var(--fire2);text-decoration:none" onclick="event.stopPropagation()">Instagram ↗️</a>' : '';
