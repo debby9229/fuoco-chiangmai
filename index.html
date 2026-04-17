@@ -1250,7 +1250,6 @@ function renderCards(places) {
     const closedBadge = closedM ? `<span class="closed-badge">✕ ${closedM[1].trim()}</span>` : '';
     return `
     <div class="place-card fade-in visible" id="card-${p.id}" style="position:relative;" data-id="${p.id}" data-cat="${p.cat}" data-time="${timeStr}" onclick="highlightFromCard(${p.id})" ontouchstart="cardTouchStart(${p.id},event)" ontouchend="cardTouchEnd(${p.id},event)">
-      ${closedBadge}
       ${ADMIN_MODE ? `<button class="edit-pencil-btn" onclick="event.stopPropagation();openEditPanel(${p.id})" title="Edit listing">✎</button>` : ''}
       <div class="card-top">
         <div class="card-photo">
