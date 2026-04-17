@@ -1339,7 +1339,7 @@ function setFilter(type, val, btn) {
 
 function applyFilters() {
   const filtered = PLACES.filter(p => {
-    const catOk = activeFilters.cat === 'all' || p.cat === activeFilters.cat;
+    const catOk = !activeFilters.cat || activeFilters.cat === 'all' || p.cat === activeFilters.cat;
     let timeOk = false;
     if (!activeFilters.time) {
       timeOk = true;
